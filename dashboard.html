@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container">
+    <h2 class="mt-5">Student Management System</h2>
+    <a href="{{ url_for('logout') }}" class="btn btn-secondary mb-3">Logout</a>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert alert-success">{{ messages[0] }}</div>
+      {% endif %}
+    {% endwith %}
+    <form class="row g-2" method="post" action="{{ url_for('add') }}">
+        <div class="col-auto">
+          <input name="name" placeholder="Name" class="form-control" required>
+        </div>
+        <div class="col-auto">
+          <input name="roll" placeholder="Roll" class="form-control" required>
+        </div>
+        <div class="col-auto">
+          <input name="marks" placeholder="Marks" class="form-control" required>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-success" type="submit">Add</button>
+        </div>
+    </form>
+    <table class="table mt-4 table-bordered table-striped">
+        <thead>
+            <tr>
+                <th><a href="{{ url_for('dashboard', sort='name', order='desc' if sort=='name' and order=='asc' else 'asc') }}">Name</a></th>
+                <th><a href="{{ url_for('dashboard', sort='roll', order='desc' if sort=='roll' and order=='asc' else 'asc') }}">Roll</a></th>
+                <th><a href="{{ url_for('dashboard', sort='marks', order='desc' if sort=='marks' and order=='asc' else 'asc') }}">Marks</a></th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+    {% for s in students %}
+            <tr>
+                <form method="post" action="{{ url_for('edit', stu_id=s[0]) }}">
+                <td><input name="name" value="{{ s[1] }}" class="form-control" required></td>
+                <td><input name="roll" value="{{ s[2] }}" class="form-control" required></td>
+                <td><input name="marks" value="{{ s[3] }}" class="form-control" required></td>
+                <td>
+                  <button class="btn btn-warning btn-sm" type="submit">Update</button>
+                  <a href="{{ url_for('delete', stu_id=s[0]) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete student?')">Delete</a>
+                </td>
+                </form>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
